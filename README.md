@@ -1,6 +1,6 @@
 # <stacked-alpha-video>
 
-A web component for rendering video with transparency, efficiently.
+A ~2 kB web component for rendering video with transparency, efficiently.
 
 ## Why?
 
@@ -61,6 +61,15 @@ And create a bundle with the component:
 import 'stacked-alpha-video';
 ```
 
+Or, use this CDN script:
+
+```js
+<script
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/stacked-alpha-video/+esm"
+></script>
+```
+
 With that script running on a page, you can use HTML like this:
 
 ```html
@@ -96,9 +105,7 @@ And as you would/should with `<video>`, give each `stacked-alpha-video` an [`asp
 This happens if the color data is premultiplied with the alpha channel. Not to worry, there's an attribute for that!
 
 ```html
-<stacked-alpha-video premultipliedalpha>
-  …
-</stacked-alpha-video>
+<stacked-alpha-video premultipliedalpha>…</stacked-alpha-video>
 ```
 
 Alternatively, you could unpremultiply the alpha channel when you encode the video. Here's the alternate filter:
@@ -113,7 +120,7 @@ Sure!
 
 ```js
 import StackedAlphaVideo from 'stacked-alpha-video/StackedAlphaVideo';
-customElements.define("whatever-you-want", StackedAlphaVideo);
+customElements.define('whatever-you-want', StackedAlphaVideo);
 ```
 
 ## Don't want to use a web component?
@@ -121,7 +128,11 @@ customElements.define("whatever-you-want", StackedAlphaVideo);
 Sure! The low-level parts are available too:
 
 ```js
-import { setupGLContext, setPremultipliedAlpha, drawVideo } from 'stacked-alpha-video/gl-helpers';
+import {
+  setupGLContext,
+  setPremultipliedAlpha,
+  drawVideo,
+} from 'stacked-alpha-video/gl-helpers';
 
 const canvas = document.createElement('canvas');
 

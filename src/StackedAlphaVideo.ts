@@ -1,8 +1,4 @@
-import {
-  drawVideo,
-  setupGLContext,
-  setPremultipliedAlpha,
-} from "./gl-helpers.js";
+import { drawVideo, setupGLContext, setPremultipliedAlpha } from './gl-helpers';
 
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
@@ -20,24 +16,23 @@ styles.replaceSync(`
   }
 `);
 
-/**
- * @param {HTMLVideoElement} video
- */
-function videoIsPlaying(video) {
+function videoIsPlaying(video: HTMLVideoElement): boolean {
   return !video.paused && !video.ended && video.readyState > 2;
 }
 
+interface State {
+  videoPlaying: boolean;
+  intersecting: boolean;
+  connected: boolean;
+}
+
 export default class StackedAlphaVideo extends HTMLElement {
-  static observedAttributes = ["premultipliedalpha"];
+  static observedAttributes = ['premultipliedalpha'];
 
-  #shadow = this.attachShadow({ mode: "closed" });
-  #canvas = document.createElement("canvas");
-
-  /** @type {WebGLRenderingContext | null} */
-  #context = null;
-
-  /** @type {HTMLVideoElement | null} */
-  #video = null;
+  #shadow = this.attachShadow({ mode: 'closed' });
+  #canvas = document.createElement('canvas');
+  #context: WebGLRenderingContext | null = null;
+  #video: HTMLVideoElement | null = null;
 
   constructor() {
     super();
@@ -68,11 +63,12 @@ export default class StackedAlphaVideo extends HTMLElement {
   #frameHandle = 0;
 
   #frame = () => {
+    if (!this.#context || !this.#video) return;
     drawVideo(this.#context, this.#video);
     this.#frameHandle = requestAnimationFrame(this.#frame);
   };
 
-  #state = {
+  #state: State = {
     videoPlaying: false,
     intersecting: false,
     connected: false,
@@ -80,7 +76,7 @@ export default class StackedAlphaVideo extends HTMLElement {
 
   #pendingStateUpdate = false;
 
-  #updateState(newState) {
+  #updateState(newState: Partial<State>) {
     Object.assign(this.#state, newState);
 
     if (this.#pendingStateUpdate) return;
@@ -101,17 +97,13 @@ export default class StackedAlphaVideo extends HTMLElement {
     });
   }
 
-  /** @type {AbortController | null} */
-  #videoListenersController = null;
+  #videoListenersController: AbortController | null = null;
 
-  /**
-   * @param {HTMLVideoElement | null} newVideo
-   */
-  #videoChange(newVideo) {
+  #videoChange(newVideo: Element | null) {
     if (this.#videoListenersController) this.#videoListenersController.abort();
 
     if (newVideo && !(newVideo instanceof HTMLVideoElement)) {
-      console.warn("<stacked-alpha-video> Child must be a <video>");
+      console.warn('<stacked-alpha-video> Child must be a <video>');
       this.#video = null;
       this.#updateState({ videoPlaying: false });
       return;
@@ -135,7 +127,7 @@ export default class StackedAlphaVideo extends HTMLElement {
     this.#videoListenersController = new AbortController();
     const signal = this.#videoListenersController.signal;
 
-    for (const event of ["playing", "stalled", "emptied", "ended", "pause"]) {
+    for (const event of ['playing', 'stalled', 'emptied', 'ended', 'pause']) {
       newVideo.addEventListener(event, videoUpdate, { signal });
     }
   }
@@ -148,15 +140,15 @@ export default class StackedAlphaVideo extends HTMLElement {
     this.#updateState({ connected: false });
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "premultipliedalpha") {
+  attributeChangedCallback(name: string, _: string, newValue: string) {
+    if (name === 'premultipliedalpha') {
       if (!this.#context) return;
       setPremultipliedAlpha(this.#context, newValue !== null);
     }
   }
 
   get premultipliedAlpha() {
-    return this.hasAttribute("premultipliedalpha");
+    return this.hasAttribute('premultipliedalpha');
   }
 
   /**
@@ -166,9 +158,9 @@ export default class StackedAlphaVideo extends HTMLElement {
    */
   set premultipliedAlpha(value) {
     if (value) {
-      this.setAttribute("premultipliedalpha", "");
+      this.setAttribute('premultipliedalpha', '');
     } else {
-      this.removeAttribute("premultipliedalpha");
+      this.removeAttribute('premultipliedalpha');
     }
   }
 }

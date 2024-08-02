@@ -37,28 +37,30 @@ void main() {
 }
 `;
 
-function loadShader(gl, source, type) {
+function loadShader(gl: WebGLRenderingContext, source: string, type: GLenum) {
   const shader = gl.createShader(type);
+  if (!shader) throw Error('Unable to create shader');
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
     const error = gl.getShaderInfoLog(shader);
     gl.deleteShader(shader);
-    throw Error(error || "unknown error");
+    throw Error(error || 'unknown error');
   }
 
   return shader;
 }
 
-function createProgram(gl, shaders) {
+function createProgram(gl: WebGLRenderingContext, shaders: WebGLShader[]) {
   const program = gl.createProgram();
+  if (!program) throw Error('Unable to create program');
   for (const shader of shaders) gl.attachShader(program, shader);
   gl.linkProgram(program);
 
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     const error = gl.getProgramInfoLog(program);
     gl.deleteProgram(program);
-    throw Error(error || "unknown error");
+    throw Error(error || 'unknown error');
   }
 
   return program;
@@ -69,13 +71,11 @@ const premultipliedAlphaLocations = new WeakMap();
 /**
  * Get a GL context for a canvas.
  * This only needs to be done once per canvas.
- *
- * @param {HTMLCanvasElement | OffscreenCanvas} canvas
  */
-export function setupGLContext(canvas) {
-  const context = canvas.getContext("webgl", {
+export function setupGLContext(canvas: HTMLCanvasElement | OffscreenCanvas) {
+  const context = canvas.getContext('webgl', {
     antialias: false,
-    powerPreference: "low-power",
+    powerPreference: 'low-power',
     depth: false,
     premultipliedAlpha: true,
   });
@@ -87,23 +87,23 @@ export function setupGLContext(canvas) {
   const frag = loadShader(
     context,
     fragmentShaderSource,
-    context.FRAGMENT_SHADER
+    context.FRAGMENT_SHADER,
   );
   const vert = loadShader(context, vertexShaderSource, context.VERTEX_SHADER);
   const program = createProgram(context, [frag, vert]);
   context.useProgram(program);
 
   // look up where the vertex data needs to go.
-  const positionLocation = context.getAttribLocation(program, "a_position");
+  const positionLocation = context.getAttribLocation(program, 'a_position');
 
   // look up uniform locations
-  const frameLoc = context.getUniformLocation(program, "u_frame");
+  const frameLoc = context.getUniformLocation(program, 'u_frame');
   context.uniform1i(frameLoc, 0); // texture unit 0
-  const matrixLoc = context.getUniformLocation(program, "u_matrix");
+  const matrixLoc = context.getUniformLocation(program, 'u_matrix');
 
   premultipliedAlphaLocations.set(
     context,
-    context.getUniformLocation(program, "u_premultipliedAlpha")
+    context.getUniformLocation(program, 'u_premultipliedAlpha'),
   );
 
   setPremultipliedAlpha(context, false);
@@ -132,22 +132,22 @@ export function setupGLContext(canvas) {
   context.texParameteri(
     context.TEXTURE_2D,
     context.TEXTURE_WRAP_S,
-    context.CLAMP_TO_EDGE
+    context.CLAMP_TO_EDGE,
   );
   context.texParameteri(
     context.TEXTURE_2D,
     context.TEXTURE_WRAP_T,
-    context.CLAMP_TO_EDGE
+    context.CLAMP_TO_EDGE,
   );
   context.texParameteri(
     context.TEXTURE_2D,
     context.TEXTURE_MIN_FILTER,
-    context.NEAREST
+    context.NEAREST,
   );
   context.texParameteri(
     context.TEXTURE_2D,
     context.TEXTURE_MAG_FILTER,
-    context.NEAREST
+    context.NEAREST,
   );
 
   return context;
@@ -157,24 +157,24 @@ export function setupGLContext(canvas) {
  * Set whether the source video uses premultiplied alpha.
  *
  * Set this to `true` if semi-transparent areas or outlines look too dark.
- *
- * @param {WebGLRenderingContext} context
- * @param {boolean} premultipliedAlpha
  */
-export function setPremultipliedAlpha(context, premultipliedAlpha) {
+export function setPremultipliedAlpha(
+  context: WebGLRenderingContext,
+  premultipliedAlpha: boolean,
+): void {
   context.uniform1f(
     premultipliedAlphaLocations.get(context),
-    premultipliedAlpha ? 1 : 0
+    premultipliedAlpha ? 1 : 0,
   );
 }
 
 /**
  * Draw a stacked-alpha video frame to a GL context.
- *
- * @param {WebGLRenderingContext} context
- * @param {HTMLVideoElement} video
  */
-export function drawVideo(context, video) {
+export function drawVideo(
+  context: WebGLRenderingContext,
+  video: HTMLVideoElement,
+): void {
   const canvas = context.canvas;
   const width = video.videoWidth;
   const height = Math.floor(video.videoHeight / 2);
@@ -191,7 +191,7 @@ export function drawVideo(context, video) {
     context.RGBA,
     context.RGBA,
     context.UNSIGNED_BYTE,
-    video
+    video,
   );
 
   context.drawArrays(context.TRIANGLES, 0, 6);

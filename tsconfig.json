@@ -12,7 +12,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "outDir": "dist",
+    "outDir": "build",
     "declaration": true
   },
   "include": ["src"]

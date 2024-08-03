@@ -1,4 +1,8 @@
-import { drawVideo, setupGLContext, setPremultipliedAlpha } from './gl-helpers';
+import {
+  drawVideo,
+  setupGLContext,
+  setPremultipliedAlpha,
+} from './gl-helpers.js';
 
 const styles = new CSSStyleSheet();
 styles.replaceSync(`

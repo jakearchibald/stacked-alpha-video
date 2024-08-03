@@ -1,6 +1,6 @@
 {
   "name": "stacked-alpha-video",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Efficient and simple video with an alpha channel",
   "homepage": "https://github.com/jakearchibald/stacked-alpha-video",
   "scripts": {
@@ -10,10 +10,13 @@
   "author": "Jake Archibald",
   "license": "Apache-2.0",
   "type": "module",
+  "files": [
+    "build/**"
+  ],
   "exports": {
-    ".": "./dist/index.js",
-    "./gl-helpers": "./dist/gl-helpers.js",
-    "./StackedAlphaVideo": "./dist/StackedAlphaVideo.js"
+    ".": "./build/index.js",
+    "./gl-helpers": "./build/gl-helpers.js",
+    "./StackedAlphaVideo": "./build/StackedAlphaVideo.js"
   },
   "devDependencies": {
     "typescript": "^5.5.4"

@@ -37,7 +37,11 @@ void main() {
 }
 `;
 
-function loadShader(gl: WebGLRenderingContext, source: string, type: GLenum) {
+function loadShader(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  source: string,
+  type: GLenum,
+) {
   const shader = gl.createShader(type);
   if (!shader) throw Error('Unable to create shader');
   gl.shaderSource(shader, source);
@@ -51,7 +55,10 @@ function loadShader(gl: WebGLRenderingContext, source: string, type: GLenum) {
   return shader;
 }
 
-function createProgram(gl: WebGLRenderingContext, shaders: WebGLShader[]) {
+function createProgram(
+  gl: WebGLRenderingContext | WebGL2RenderingContext,
+  shaders: WebGLShader[],
+) {
   const program = gl.createProgram();
   if (!program) throw Error('Unable to create program');
   for (const shader of shaders) gl.attachShader(program, shader);
@@ -73,12 +80,14 @@ const premultipliedAlphaLocations = new WeakMap();
  * This only needs to be done once per canvas.
  */
 export function setupGLContext(canvas: HTMLCanvasElement | OffscreenCanvas) {
-  const context = canvas.getContext('webgl', {
+  const options: WebGLContextAttributes = {
     antialias: false,
     powerPreference: 'low-power',
     depth: false,
     premultipliedAlpha: true,
-  });
+  };
+  const context =
+    canvas.getContext('webgl2', options) ?? canvas.getContext('webgl', options);
 
   if (!context) {
     throw Error("Couldn't create GL context");
@@ -159,7 +168,7 @@ export function setupGLContext(canvas: HTMLCanvasElement | OffscreenCanvas) {
  * Set this to `true` if semi-transparent areas or outlines look too dark.
  */
 export function setPremultipliedAlpha(
-  context: WebGLRenderingContext,
+  context: WebGLRenderingContext | WebGL2RenderingContext,
   premultipliedAlpha: boolean,
 ): void {
   context.uniform1f(
@@ -172,7 +181,7 @@ export function setPremultipliedAlpha(
  * Draw a stacked-alpha video frame to a GL context.
  */
 export function drawVideo(
-  context: WebGLRenderingContext,
+  context: WebGLRenderingContext | WebGL2RenderingContext,
   video: HTMLVideoElement,
 ): void {
   const canvas = context.canvas;

@@ -2,9 +2,13 @@
 
 A ~2 kB web component for rendering video with transparency, efficiently.
 
+[Demo](https://codepen.io/jaffathecake/pen/GRbmVNx?editors=1100).
+
 ## Why?
 
 Although VP9 and HEVC support alpha transparency natively, they're old codecs and their encoders perform poorly compared to AV1. This component lets you use AV1 if the video is encoded in a particular way (see below). The result is a file half the size or smaller than the VP9 equivalent, and waayyy smaller than the HEVC.
+
+For more details, [see the blog post](https://jakearchibald.com/2024/video-with-transparency/).
 
 ## Encoding the video
 

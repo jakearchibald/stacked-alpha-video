@@ -120,7 +120,12 @@ export default class StackedAlphaVideo extends HTMLElement {
       return;
     }
 
-    if (newVideo.autoplay) newVideo.play();
+    if (newVideo.autoplay) {
+      // This only works in Safari if a task is queued.
+      setTimeout(() => {
+        newVideo.play();
+      }, 0);
+    }
 
     const videoUpdate = () => {
       this.#updateState({ videoPlaying: videoIsPlaying(newVideo) });

@@ -1,6 +1,6 @@
 {
   "name": "stacked-alpha-video",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Efficient and simple video with an alpha channel",
   "homepage": "https://github.com/jakearchibald/stacked-alpha-video",
   "scripts": {

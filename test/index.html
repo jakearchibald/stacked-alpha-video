@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<script type="module" src="../build/index.js"></script>
+
+<style>
+  html {
+    background: linear-gradient(0deg, #fff, #fff0 40%),
+      radial-gradient(400px 600px at 75vw 10vh, #aba0ffcc 0, #ed6bf800),
+      radial-gradient(400px 600px at 65vw 30vh, #aba0ffcc 0, #ed6bf800),
+      radial-gradient(1200px 800px at -10vw 20vh, #55d5b6 0, #79dfff00),
+      radial-gradient(1200px 800px at 90vw 40vh, #55d5b6 0, #79dfff00),
+      linear-gradient(0deg, #79dfff, #79dfff);
+    min-height: 100vh;
+    display: grid;
+    align-content: center;
+  }
+
+  stacked-alpha-video {
+    display: block;
+    width: 100%;
+    max-width: 676px;
+    margin: 0 auto;
+  }
+
+  stacked-alpha-video video {
+    display: none;
+  }
+</style>
+
+<stacked-alpha-video style="aspect-ratio: 1597 / 833">
+  <video autoplay crossorigin muted playsinline loop>
+    <source src="https://jakearchibald.com/c/split-av1-86bc6e48.mp4" type="video/mp4; codecs=av01.0.08M.08.0.110.01.01.01.1">
+    <source src="https://jakearchibald.com/c/split-hevc-9103f51b.mp4" type="video/mp4; codecs=hvc1.1.6.H120.b0">
+  </video>
+</stacked-alpha-video>

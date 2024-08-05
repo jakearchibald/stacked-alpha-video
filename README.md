@@ -1,4 +1,4 @@
-# <stacked-alpha-video>
+# `<stacked-alpha-video>`
 
 A ~2 kB web component for rendering video with transparency, efficiently.
 

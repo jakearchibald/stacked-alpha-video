@@ -5,7 +5,7 @@
   "homepage": "https://github.com/jakearchibald/stacked-alpha-video",
   "scripts": {
     "build": "tsc",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "author": "Jake Archibald",
   "license": "Apache-2.0",

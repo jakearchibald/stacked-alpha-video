@@ -9,9 +9,13 @@
       radial-gradient(1200px 800px at -10vw 20vh, #55d5b6 0, #79dfff00),
       radial-gradient(1200px 800px at 90vw 40vh, #55d5b6 0, #79dfff00),
       linear-gradient(0deg, #79dfff, #79dfff);
-    min-height: 100vh;
+    min-height: 300vh;
+  }
+
+  .container {
     display: grid;
-    align-content: center;
+    place-items: center;
+    height: 100vh;
   }
 
   stacked-alpha-video {
@@ -26,9 +30,12 @@
   }
 </style>
 
-<stacked-alpha-video style="aspect-ratio: 1597 / 833">
-  <video autoplay crossorigin muted playsinline loop>
-    <source src="https://jakearchibald.com/c/split-av1-86bc6e48.mp4" type="video/mp4; codecs=av01.0.08M.08.0.110.01.01.01.1">
-    <source src="https://jakearchibald.com/c/split-hevc-9103f51b.mp4" type="video/mp4; codecs=hvc1.1.6.H120.b0">
-  </video>
-</stacked-alpha-video>
+<div class="container">
+  <stacked-alpha-video style="aspect-ratio: 1597 / 833">
+    <video autoplay crossorigin muted playsinline loop>
+      <source src="https://jakearchibald.com/c/split-av1-86bc6e48.mp4" type="video/mp4; codecs=av01.0.08M.08.0.110.01.01.01.1">
+      <source src="https://jakearchibald.com/c/split-hevc-9103f51b.mp4" type="video/mp4; codecs=hvc1.1.6.H120.b0">
+    </video>
+  </stacked-alpha-video>
+</div>
+

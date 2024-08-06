@@ -43,12 +43,6 @@ export default class StackedAlphaVideo extends HTMLElement {
     this.#shadow.adoptedStyleSheets = [styles];
     this.#shadow.append(this.#canvas);
 
-    try {
-      this.#context = setupGLContext(this.#canvas);
-    } catch (err) {
-      console.warn("<stacked-alpha-video> Couldn't create GL context");
-    }
-
     new IntersectionObserver(([entry]) => {
       this.#updateState({ intersecting: entry.isIntersecting });
     }).observe(this);
@@ -67,7 +61,22 @@ export default class StackedAlphaVideo extends HTMLElement {
   #frameHandle = 0;
 
   #frame = () => {
-    if (!this.#context || !this.#video) return;
+    if (!this.#video) return;
+
+    if (!this.#context) {
+      this.#canvas.remove();
+      this.#canvas = document.createElement('canvas');
+      this.#shadow.append(this.#canvas);
+
+      try {
+        this.#context = setupGLContext(this.#canvas);
+      } catch (err) {
+        console.warn("<stacked-alpha-video> Couldn't create GL context");
+      }
+
+      if (!this.#context) return;
+    }
+
     drawVideo(this.#context, this.#video);
     this.#frameHandle = requestAnimationFrame(this.#frame);
   };
@@ -93,7 +102,11 @@ export default class StackedAlphaVideo extends HTMLElement {
 
       cancelAnimationFrame(this.#frameHandle);
 
-      if (!connected || !videoPlaying || !intersecting || !this.#context) {
+      if (!connected || !videoPlaying || !intersecting) {
+        if (this.#context) {
+          this.#context.getExtension('WEBGL_lose_context')?.loseContext();
+          this.#context = null;
+        }
         return;
       }
 

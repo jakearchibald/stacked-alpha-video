@@ -75,6 +75,7 @@ export default class StackedAlphaVideo extends HTMLElement {
       }
 
       if (!this.#context) return;
+      setPremultipliedAlpha(this.#context, this.premultipliedAlpha);
     }
 
     drawVideo(this.#context, this.#video);

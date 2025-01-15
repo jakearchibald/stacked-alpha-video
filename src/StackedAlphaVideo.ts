@@ -79,7 +79,10 @@ export default class StackedAlphaVideo extends HTMLElement {
     }
 
     drawVideo(this.#context, this.#video);
-    this.#frameHandle = requestAnimationFrame(this.#frame);
+
+    if (this.#state.videoPlaying) {
+      this.#frameHandle = requestAnimationFrame(this.#frame);
+    }
   };
 
   #state: State = {
@@ -99,11 +102,12 @@ export default class StackedAlphaVideo extends HTMLElement {
     // Queue a microtask to pick up multiple state changes in one.
     queueMicrotask(() => {
       this.#pendingStateUpdate = false;
-      const { videoPlaying, connected, intersecting } = this.#state;
+      const { connected, intersecting } = this.#state;
 
       cancelAnimationFrame(this.#frameHandle);
 
-      if (!connected || !videoPlaying || !intersecting) {
+      // We don't lose the context if the video is paused, as we still want it to display.
+      if (!connected || !intersecting) {
         if (this.#context) {
           this.#context.getExtension('WEBGL_lose_context')?.loseContext();
           this.#context = null;
@@ -111,6 +115,8 @@ export default class StackedAlphaVideo extends HTMLElement {
         return;
       }
 
+      // This will happen even if the video is paused, as we want it to render a single frame if it's just been connected,
+      // or just intersected. #frame() will avoid queuing additional frames if the video is paused.
       this.#frameHandle = requestAnimationFrame(this.#frame);
     });
   }
